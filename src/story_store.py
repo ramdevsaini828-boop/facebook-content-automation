@@ -57,19 +57,44 @@ def save_processed_articles(articles):
 
 
 def create_story(topic, event):
+
     now = datetime.now().isoformat()
 
-    keywords = event.get("keywords", [])
+    raw_keywords = event.get(
+        "keywords",
+        []
+    )
 
-    story_id = build_story_id(topic, keywords)
+    keywords = clean_keywords(
+        raw_keywords
+    )
+
+    story_id = build_story_id(
+        topic,
+        keywords
+    )
+
+    fingerprint = build_fingerprint(
+        topic=topic,
+        keywords=keywords,
+        articles=event.get(
+            "articles",
+            []
+        ),
+    )
 
     return {
         "story_id": story_id,
         "topic": topic,
         "status": "active",
+
         "first_seen": now,
         "last_updated": now,
+
         "keywords": keywords[:15],
+
+        "fingerprint": fingerprint,
+
         "articles": [],
         "developments": [],
         "sources": [],
