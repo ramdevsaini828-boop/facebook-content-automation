@@ -1,5 +1,9 @@
 from trends import get_top_topics
 from news import analyze_topic
+from event_ranker import (
+    rank_events,
+    print_ranked_events
+)
 
 
 def main():
@@ -18,39 +22,110 @@ def main():
 
     analyses = []
 
-    for number, topic_data in enumerate(top_topics, start=1):
+    for number, topic_data in enumerate(
+        top_topics,
+        start=1
+    ):
 
         topic = topic_data["topic"]
 
-        print(f"\n{'#' * 60}")
-        print(f"TOPIC {number}: {topic}")
-        print(f"{'#' * 60}")
+        print("\n" + "#" * 60)
+        print(
+            f"TOPIC {number}: {topic}"
+        )
+        print("#" * 60)
 
         result = analyze_topic(topic)
 
         analyses.append(result)
 
-    print("\n\n===================================")
-    print(" EVENT ANALYSIS COMPLETE")
-    print("===================================")
+    print("\n\n")
+    print("=" * 60)
+    print(" EVENT RANKING")
+    print("=" * 60)
+
+    final_events = []
 
     for result in analyses:
 
-        print(f"\n📌 {result['topic']}")
+        topic = result["topic"]
+        articles = result["articles"]
 
-        if not result["articles"]:
-            print("   ❌ Not enough fresh news")
+        print("\n")
+        print(f"📌 TOPIC: {topic}")
+
+        if not articles:
+
+            print(
+                "❌ Not enough fresh news"
+            )
+
             continue
 
+        events = rank_events(articles)
+
+        print_ranked_events(events)
+
+        if events:
+
+            strongest_event = events[0]
+
+            final_events.append({
+                "topic": topic,
+                "event": strongest_event
+            })
+
+
+    print("\n\n")
+    print("=" * 60)
+    print(" 🏆 STRONGEST EVENT FOR EACH TOPIC")
+    print("=" * 60)
+
+    for item in final_events:
+
+        topic = item["topic"]
+        event = item["event"]
+
+        print("\n" + "-" * 60)
+
         print(
-            f"   📰 Fresh articles: "
-            f"{len(result['articles'])}"
+            f"TOPIC: {topic}"
         )
 
-        print("   🔥 Event signals:")
+        print(
+            f"EVENT SCORE: "
+            f"{event['score']}"
+        )
 
-        for word, count in result["event_signal"][:5]:
-            print(f"      {word}: {count}")
+        print(
+            "EVENT KEYWORDS: "
+            + ", ".join(
+                event["keywords"][:8]
+            )
+        )
+
+        print(
+            f"SUPPORTING ARTICLES: "
+            f"{len(event['articles'])}"
+        )
+
+        print("\nTOP HEADLINES:")
+
+        for article in event["articles"][:5]:
+
+            print(
+                f"- {article['title']}"
+            )
+
+            print(
+                f"  Source: "
+                f"{article['source']}"
+            )
+
+            print(
+                f"  Published: "
+                f"{article['published']}"
+            )
 
 
 if __name__ == "__main__":
