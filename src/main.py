@@ -1,3 +1,8 @@
+from evidence import (
+    build_evidence_dataset,
+    print_evidence_dataset,
+)
+
 from trends import get_top_topics
 from news import analyze_topic
 from event_ranker import (
@@ -171,6 +176,20 @@ def main():
             research_articles
         )
 
+# ==========================================
+# STEP 6E - EVIDENCE EXTRACTION
+# ==========================================
+
+evidence_data = build_evidence_dataset(
+    topic,
+    strongest_event,
+    research_articles
+)
+
+print_evidence_dataset(
+    evidence_data
+)
+        
         print("\n📊 RESEARCH SUMMARY")
 
         print(
