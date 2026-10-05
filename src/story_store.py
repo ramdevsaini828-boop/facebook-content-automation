@@ -1,3 +1,7 @@
+from story_fingerprint import (
+    build_fingerprint,
+    clean_keywords,
+) 
 import json
 import os
 from datetime import datetime
