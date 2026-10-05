@@ -1,21 +1,25 @@
-from trends import get_google_trends
+from trends import get_top_topics
 
 
 def main():
+
     print("===================================")
     print(" Facebook Content Automation")
     print("===================================")
 
-    trends = get_google_trends(limit=20)
+    top_topics = get_top_topics(3)
 
-    print("\n🔥 CURRENT INDIA TRENDS\n")
+    print("\n🏆 FINAL TOP 3 TOPICS\n")
 
-    if not trends:
-        print("No trends found.")
+    if not top_topics:
+        print("No suitable topics found.")
         return
 
-    for number, trend in enumerate(trends, start=1):
-        print(f"{number}. {trend['topic']}")
+    for number, topic in enumerate(top_topics, start=1):
+
+        print(f"\n{number}. {topic['topic']}")
+        print(f"   Score: {topic['score']}")
+        print(f"   News coverage: {topic['news_count']}")
 
 
 if __name__ == "__main__":
