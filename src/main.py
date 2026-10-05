@@ -18,7 +18,6 @@ from event_ranker import (
 
 from research import (
     collect_research,
-    print_research_articles,
     analyze_research,
 )
 
@@ -209,10 +208,6 @@ def main():
         # ------------------------------------------
         # PRINT RESEARCH ARTICLES
         # ------------------------------------------
-
-        print_research_articles(
-            research_articles
-        )
 
         # ------------------------------------------
         # ANALYZE RESEARCH
