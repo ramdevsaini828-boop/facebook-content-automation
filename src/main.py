@@ -1,3 +1,8 @@
+from research import (
+    collect_research,
+    print_research_articles,
+    analyze_research,
+)
 from trends import get_top_topics
 from news import analyze_topic
 from event_ranker import (
@@ -80,7 +85,34 @@ def main():
     print("=" * 60)
     print(" 🏆 STRONGEST EVENT FOR EACH TOPIC")
     print("=" * 60)
+# ==========================================
+# STEP 6D - DEEP RESEARCH
+# ==========================================
 
+print("\n\n🔬 Starting deep research...")
+
+research_articles = collect_research(
+    topic,
+    strongest_event
+)
+
+print_research_articles(
+    research_articles
+)
+
+research_data = analyze_research(
+    topic,
+    strongest_event,
+    research_articles
+)
+
+print("\n📊 RESEARCH SUMMARY")
+print(
+    f"Articles: {research_data['article_count']}"
+)
+print(
+    f"Sources: {research_data['source_count']}"
+)
     for item in final_events:
 
         topic = item["topic"]
