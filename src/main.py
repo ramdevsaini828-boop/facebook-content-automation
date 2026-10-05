@@ -293,7 +293,53 @@ def main():
         # ------------------------------------------
         # VERIFICATION SUMMARY
         # ------------------------------------------
+        # STEP 7 - FACEBOOK CONTENT GENERATION
+        print("\n")
+        print("=" * 60)
+        print(" ✍️ STEP 7 - FACEBOOK CONTENT GENERATION")
+        print("=" * 60)
 
+        post = build_facebook_post(
+            topic,
+            strongest_event,
+            research_data,
+            evidence_data,
+            verified_articles,
+        )
+
+        print("\n📝 GENERATED FACEBOOK POST\n")
+        print(post)
+
+        # STEP 7A - SAVE POST
+        text_file = save_post(
+            post,
+            topic
+        )
+
+        json_file = save_post_json(
+            post,
+            topic,
+            strongest_event
+        )
+
+        print("\n💾 POST SAVED")
+        print(f"Text: {text_file}")
+        print(f"JSON: {json_file}")
+
+        # STEP 8 - FACEBOOK PUBLISH
+        print("\n")
+        print("=" * 60)
+        print(" 📤 STEP 8 - FACEBOOK PUBLISH")
+        print("=" * 60)
+
+        publish_result = publish_to_facebook(post)
+
+        if publish_result["published"]:
+            print("✅ Published successfully.")
+        else:
+            print("ℹ️ Facebook post not published.")
+
+        
         print(
             "\n📊 VERIFICATION SUMMARY"
         )
