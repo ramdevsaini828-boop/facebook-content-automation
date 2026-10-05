@@ -2,10 +2,6 @@ from story_tracker import (
     track_story,
     print_story_status,
     refresh_active_story,
-) 
-from story_tracker import (
-    track_story,
-    print_story_status,
 )
 
 from content import (
@@ -57,9 +53,7 @@ def main():
     print("\n🏆 TOP 3 TRENDING TOPICS\n")
 
     if not top_topics:
-
         print("No suitable topics found.")
-
         return
 
     analyses = []
@@ -76,9 +70,7 @@ def main():
         topic = topic_data["topic"]
 
         print("\n" + "#" * 60)
-        print(
-            f"TOPIC {number}: {topic}"
-        )
+        print(f"TOPIC {number}: {topic}")
         print("#" * 60)
 
         result = analyze_topic(topic)
@@ -99,20 +91,14 @@ def main():
     for result in analyses:
 
         topic = result["topic"]
-
         articles = result["articles"]
 
         print("\n")
-        print(
-            f"📌 TOPIC: {topic}"
-        )
+        print(f"📌 TOPIC: {topic}")
 
         if not articles:
 
-            print(
-                "❌ Not enough fresh news"
-            )
-
+            print("❌ Not enough fresh news")
             continue
 
         events = rank_events(
@@ -138,22 +124,17 @@ def main():
 
     print("\n\n")
     print("=" * 60)
-    print(
-        " 🏆 STRONGEST EVENT FOR EACH TOPIC"
-    )
+    print(" 🏆 STRONGEST EVENT FOR EACH TOPIC")
     print("=" * 60)
 
     for item in final_events:
 
         topic = item["topic"]
-
         event = item["event"]
 
         print("\n" + "-" * 60)
 
-        print(
-            f"TOPIC: {topic}"
-        )
+        print(f"TOPIC: {topic}")
 
         print(
             f"EVENT SCORE: "
@@ -196,24 +177,17 @@ def main():
 
     print("\n\n")
     print("=" * 60)
-    print(
-        " 🔬 STEP 6D - DEEP RESEARCH"
-    )
+    print(" 🔬 STEP 6D - DEEP RESEARCH")
     print("=" * 60)
 
     for item in final_events:
 
         topic = item["topic"]
-
         strongest_event = item["event"]
 
         print("\n")
         print("#" * 60)
-
-        print(
-            f"🔬 RESEARCHING: {topic}"
-        )
-
+        print(f"🔬 RESEARCHING: {topic}")
         print("#" * 60)
 
         # ------------------------------------------
@@ -226,10 +200,6 @@ def main():
         )
 
         # ------------------------------------------
-        # PRINT RESEARCH ARTICLES
-        # ------------------------------------------
-
-        # ------------------------------------------
         # ANALYZE RESEARCH
         # ------------------------------------------
 
@@ -239,9 +209,7 @@ def main():
             research_articles
         )
 
-        print(
-            "\n📊 RESEARCH SUMMARY"
-        )
+        print("\n📊 RESEARCH SUMMARY")
 
         print(
             f"Articles: "
@@ -259,11 +227,7 @@ def main():
 
         print("\n")
         print("=" * 60)
-
-        print(
-            " 🧾 STEP 6E - EVIDENCE EXTRACTION"
-        )
-
+        print(" 🧾 STEP 6E - EVIDENCE EXTRACTION")
         print("=" * 60)
 
         evidence_data = build_evidence_dataset(
@@ -282,11 +246,7 @@ def main():
 
         print("\n")
         print("=" * 60)
-
-        print(
-            " 🔎 STEP 6F - SOURCE VERIFICATION"
-        )
-
+        print(" 🔎 STEP 6F - SOURCE VERIFICATION")
         print("=" * 60)
 
         verified_articles = (
@@ -303,127 +263,13 @@ def main():
         # ------------------------------------------
         # VERIFICATION SUMMARY
         # ------------------------------------------
-        # STEP 7 - FACEBOOK CONTENT GENERATION
-        print("\n")
-        print("=" * 60)
-        print(" ✍️ STEP 7 - FACEBOOK CONTENT GENERATION")
-        print("=" * 60)
 
-        post = build_facebook_post(
-            topic,
-            strongest_event,
-            research_data,
-            evidence_data,
-            verified_articles,
-        )
-
-        print("\n📝 GENERATED FACEBOOK POST\n")
-        print(post)
-
-        # STEP 7A - SAVE POST
-        text_file = save_post(
-            post,
-            topic
-        )
-
-        json_file = save_post_json(
-            post,
-            topic,
-            strongest_event
-        )
-
-        print("\n💾 POST SAVED")
-        print(f"Text: {text_file}")
-        print(f"JSON: {json_file}")
-
-        # STEP 8 - FACEBOOK PUBLISH
-        print("\n")
-        print("=" * 60)
-        print(" 📤 STEP 8 - FACEBOOK PUBLISH")
-        print("=" * 60)
-
-        publish_result = publish_to_facebook(post)
-
-        if publish_result["published"]:
-            print("✅ Published successfully.")
-        else:
-            print("ℹ️ Facebook post not published.")
-
-                # STEP 9 - CONTINUOUS STORY TRACKING
-        print("\n")
-        print("=" * 60)
-        print(" 🧵 STEP 9 - CONTINUOUS STORY TRACKING")
-        print("=" * 60)
-# STEP 9 - CONTINUOUS STORY TRACKING
-print("\n")
-print("=" * 60)
-print(" 🧵 STEP 9 - CONTINUOUS STORY TRACKING")
-print("=" * 60)
-
-tracking_result = track_story(
-    topic,
-    strongest_event,
-    research_data.get(
-        "articles",
-        []
-    ),
-)
-
-print_story_status(
-    tracking_result
-)
-
-# ---------------------------------------------
-# REFRESH THE ACTIVE STORY
-# ---------------------------------------------
-
-refresh_result = refresh_active_story(
-    tracking_result["story"]
-)
-
-print("")
-print("📡 STORY REFRESH RESULT")
-print(
-    f"Articles found: "
-    f"{refresh_result['articles_found']}"
-)
-
-print(
-    f"New developments: "
-    f"{len(refresh_result['new_developments'])}"
-)
-
-if refresh_result["new_developments"]:
-
-    print("")
-    print("🆕 NEW STORY DEVELOPMENTS")
-
-    for development in (
-        refresh_result["new_developments"]
-    ):
-        print(
-            f"• {development.get('title')}"
-        )
-        tracking_result = track_story(
-            topic,
-            strongest_event,
-            research_data.get(
-                "articles",
-                []
-            ),
-        )
-
-        print_story_status(
-            tracking_result
-        )
-        print(
-            "\n📊 VERIFICATION SUMMARY"
-        )
+        print("\n📊 VERIFICATION SUMMARY")
 
         verified_count = sum(
             1
             for article in verified_articles
-            if article["verified"]
+            if article.get("verified")
         )
 
         unavailable_count = (
@@ -446,17 +292,150 @@ if refresh_result["new_developments"]:
             f"{unavailable_count}"
         )
 
+        # ==========================================
+        # STEP 9 - CONTINUOUS STORY TRACKING
+        # ==========================================
+
+        print("\n")
+        print("=" * 60)
+        print(" 🧵 STEP 9 - CONTINUOUS STORY TRACKING")
+        print("=" * 60)
+
+        tracking_result = track_story(
+            topic,
+            strongest_event,
+            research_data.get(
+                "articles",
+                []
+            ),
+        )
+
+        print_story_status(
+            tracking_result
+        )
+
+        # ------------------------------------------
+        # REFRESH ACTIVE STORY
+        # ------------------------------------------
+
+        refresh_result = refresh_active_story(
+            tracking_result["story"]
+        )
+
+        print("\n")
+        print("📡 STORY REFRESH RESULT")
+
+        print(
+            f"Articles found: "
+            f"{refresh_result['articles_found']}"
+        )
+
+        print(
+            f"New developments: "
+            f"{len(refresh_result['new_developments'])}"
+        )
+
+        if refresh_result["new_developments"]:
+
+            print("\n🆕 NEW STORY DEVELOPMENTS")
+
+            for development in (
+                refresh_result["new_developments"]
+            ):
+
+                print(
+                    f"• {development.get('title')}"
+                )
+
+                print(
+                    f"  Source: "
+                    f"{development.get('source', '')}"
+                )
+
+        else:
+
+            print(
+                "ℹ️ No new development found "
+                "in this refresh."
+            )
+
+        # ==========================================
+        # STEP 7 - FACEBOOK CONTENT GENERATION
+        # ==========================================
+
+        print("\n")
+        print("=" * 60)
+        print(" ✍️ STEP 7 - FACEBOOK CONTENT GENERATION")
+        print("=" * 60)
+
+        post = build_facebook_post(
+            topic,
+            strongest_event,
+            research_data,
+            evidence_data,
+            verified_articles,
+        )
+
+        print("\n📝 GENERATED FACEBOOK POST\n")
+        print(post)
+
+        # ==========================================
+        # STEP 7A - SAVE POST
+        # ==========================================
+
+        text_file = save_post(
+            post,
+            topic
+        )
+
+        json_file = save_post_json(
+            post,
+            topic,
+            strongest_event
+        )
+
+        print("\n💾 POST SAVED")
+
+        print(
+            f"Text: {text_file}"
+        )
+
+        print(
+            f"JSON: {json_file}"
+        )
+
+        # ==========================================
+        # STEP 8 - FACEBOOK PUBLISH
+        # ==========================================
+
+        print("\n")
+        print("=" * 60)
+        print(" 📤 STEP 8 - FACEBOOK PUBLISH")
+        print("=" * 60)
+
+        publish_result = publish_to_facebook(
+            post
+        )
+
+        if publish_result["published"]:
+
+            print(
+                "✅ Published successfully."
+            )
+
+        else:
+
+            print(
+                "ℹ️ Facebook post not published."
+            )
+
     # ==========================================
     # AUTOMATION FINISHED
     # ==========================================
 
     print("\n\n")
     print("=" * 60)
-
-    print(
-        " ✅ AUTOMATION RUN COMPLETED"
-    )
-
+    print(" ✅ AUTOMATION RUN COMPLETED")
     print("=" * 60)
 
 
