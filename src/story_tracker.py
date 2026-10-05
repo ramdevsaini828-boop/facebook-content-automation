@@ -28,10 +28,8 @@ def find_or_create_story(
         "title": topic,
     }
 
-    story, score = find_matching_story(
-        dummy_article,
-        stories,
-    )
+    story, score, _ = find_matching_story
+    (dummy_article, stories) 
 
     if story:
         return stories, story, False
