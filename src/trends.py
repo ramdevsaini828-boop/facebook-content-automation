@@ -83,25 +83,59 @@ def check_news_coverage(topic):
         return 0
 
 
-def calculate_score(position, news_count):
+LOW_VALUE_KEYWORDS = [
+    "horoscope",
+    "rashifal",
+    "राशिफल",
+    "astrology",
+    "weather",
+    "lottery",
+    "ज्योतिष",
+    "today horoscope",
+]
+
+
+def is_low_value_topic(topic):
     """
-    Topic ka preliminary viral/relevance score.
+    Low-value / unsuitable topics ko filter karta hai.
     """
 
-    trend_score = max(0, 100 - ((position - 1) * 5))
+    topic_lower = topic.lower().strip()
 
-    if news_count >= 10:
-        news_score = 40
-    elif news_count >= 7:
+    for keyword in LOW_VALUE_KEYWORDS:
+        if keyword.lower() in topic_lower:
+            return True
+
+    return False
+
+
+def calculate_score(position, news_count, topic):
+    """
+    Preliminary topic quality score.
+    """
+
+    # Trend position
+    trend_score = max(
+        0,
+        100 - ((position - 1) * 4)
+    )
+
+    # News coverage
+    if news_count >= 20:
         news_score = 30
-    elif news_count >= 4:
-        news_score = 20
+    elif news_count >= 10:
+        news_score = 25
+    elif news_count >= 5:
+        news_score = 18
     elif news_count >= 2:
         news_score = 10
     else:
         news_score = 0
 
-    return trend_score + news_score
+    # Low-value topic penalty
+    penalty = 50 if is_low_value_topic(topic) else 0
+
+    return trend_score + news_score - penalty
 
 
 def get_top_topics(limit=3):
