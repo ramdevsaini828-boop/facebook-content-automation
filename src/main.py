@@ -344,7 +344,24 @@ def main():
         else:
             print("ℹ️ Facebook post not published.")
 
-        
+                # STEP 9 - CONTINUOUS STORY TRACKING
+        print("\n")
+        print("=" * 60)
+        print(" 🧵 STEP 9 - CONTINUOUS STORY TRACKING")
+        print("=" * 60)
+
+        tracking_result = track_story(
+            topic,
+            strongest_event,
+            research_data.get(
+                "articles",
+                []
+            ),
+        )
+
+        print_story_status(
+            tracking_result
+        )
         print(
             "\n📊 VERIFICATION SUMMARY"
         )
