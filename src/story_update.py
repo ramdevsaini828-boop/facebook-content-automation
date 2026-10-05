@@ -148,34 +148,58 @@ def add_article_to_story(story, article):
 
 def update_stories_with_articles(
     stories,
-    articles,
+    articles
 ):
+
     results = []
 
     for article in articles:
 
-        story, score = find_matching_story(
+        (
+            story,
+            score,
+            match_type,
+        ) = find_matching_story(
             article,
-            stories,
+            stories
         )
 
         if story is None:
+
             results.append({
-                "status": "unmatched",
+                "status": "unrelated",
+                "match_type": "unrelated",
                 "article": article,
+                "match_score": score,
+            })
+
+            continue
+
+        if match_type == "review":
+
+            results.append({
+                "status": "review",
+                "match_type": "review",
+                "article": article,
+                "story": story,
+                "match_score": score,
             })
 
             continue
 
         result = add_article_to_story(
             story,
-            article,
+            article
         )
 
         result["match_score"] = score
+        result["match_type"] = match_type
 
-        results.append(result)
+        results.append(
+            result
+        )
 
+    return results
     return results
 
 
