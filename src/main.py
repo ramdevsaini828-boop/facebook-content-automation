@@ -1,3 +1,7 @@
+from verifier import (
+    verify_research_articles,
+)
+
 from evidence import (
     build_evidence_dataset,
     print_evidence_dataset,
@@ -185,6 +189,19 @@ evidence_data = build_evidence_dataset(
     strongest_event,
     research_articles
 )
+# ==========================================
+# STEP 6F - SOURCE VERIFICATION
+# ==========================================
+
+verified_articles = verify_research_articles(
+    research_articles,
+    strongest_event.get(
+        "keywords",
+        []
+    ),
+    max_articles=10
+)
+
 
 print_evidence_dataset(
     evidence_data
