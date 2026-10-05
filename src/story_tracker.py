@@ -191,6 +191,36 @@ def get_new_developments(results):
 
     return developments
 
+def summarize_refresh(results):
+
+    summary = {
+        "new": 0,
+        "duplicate": 0,
+        "review": 0,
+        "unrelated": 0,
+    }
+
+    for result in results:
+
+        status = result.get(
+            "status",
+            "unrelated"
+        )
+
+        if status == "new":
+            summary["new"] += 1
+
+        elif status == "duplicate":
+            summary["duplicate"] += 1
+
+        elif status == "review":
+            summary["review"] += 1
+
+        else:
+            summary["unrelated"] += 1
+
+    return summary
+    
 def print_story_status(
     tracking_result,
 ):
