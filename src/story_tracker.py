@@ -169,6 +169,27 @@ def track_story(
         "results": results,
     }
 
+def get_new_developments(results):
+
+    developments = []
+
+    for result in results:
+
+        if result.get(
+            "status"
+        ) != "new":
+            continue
+
+        development = result.get(
+            "development"
+        )
+
+        if development:
+            developments.append(
+                development
+            )
+
+    return developments
 
 def print_story_status(
     tracking_result,
