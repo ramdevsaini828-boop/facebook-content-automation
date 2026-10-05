@@ -330,10 +330,35 @@ def main():
             f"{refresh_result['articles_found']}"
         )
 
-        print(
-            f"New developments: "
-            f"{len(refresh_result['new_developments'])}"
-        )
+        summary = refresh_result.get(
+    "summary",
+    {}
+)
+
+print(
+    f"Articles searched: "
+    f"{refresh_result['articles_found']}"
+)
+
+print(
+    f"✅ New developments: "
+    f"{summary.get('new', 0)}"
+)
+
+print(
+    f"♻️ Duplicates: "
+    f"{summary.get('duplicate', 0)}"
+)
+
+print(
+    f"⚠️ Needs review: "
+    f"{summary.get('review', 0)}"
+)
+
+print(
+    f"❌ Unrelated: "
+    f"{summary.get('unrelated', 0)}"
+) 
 
         if refresh_result["new_developments"]:
 
