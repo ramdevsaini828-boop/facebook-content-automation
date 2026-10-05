@@ -159,9 +159,10 @@ def get_top_topics(limit=3):
         news_count = check_news_coverage(topic)
 
         score = calculate_score(
-            position,
-            news_count
-        )
+    position,
+    news_count,
+    topic
+)
 
         scored_topics.append({
             "topic": topic,
