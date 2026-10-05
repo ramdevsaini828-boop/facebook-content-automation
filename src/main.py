@@ -292,7 +292,7 @@ def main():
             f"{unavailable_count}"
         )
 
-           # ============================================================
+    # ============================================================
     # STEP 9 — CONTINUOUS STORY TRACKING
     # ============================================================
 
@@ -387,30 +387,7 @@ print(
     f"{summary.get('unrelated', 0)}"
 ) 
 
-        if refresh_result["new_developments"]:
-
-            print("\n🆕 NEW STORY DEVELOPMENTS")
-
-            for development in (
-                refresh_result["new_developments"]
-            ):
-
-                print(
-                    f"• {development.get('title')}"
-                )
-
-                print(
-                    f"  Source: "
-                    f"{development.get('source', '')}"
-                )
-
-        else:
-
-            print(
-                "ℹ️ No new development found "
-                "in this refresh."
-            )
-
+       
         # ==========================================
         # STEP 7 - FACEBOOK CONTENT GENERATION
         # ==========================================
