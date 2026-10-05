@@ -15,6 +15,7 @@ from story_detector import (
     find_matching_story,
 )
 
+from story_search import search_active_story
 
 def find_or_create_story(
     topic,
@@ -229,3 +230,65 @@ def print_story_status(
             print(
                 f"• {item.get('title')}"
             )
+def refresh_active_story(story):
+    """
+    Search an already active story for new developments.
+    """
+
+    print("")
+    print("=" * 60)
+    print(
+        f" 🔄 REFRESHING STORY: "
+        f"{story.get('topic')}"
+    )
+    print("=" * 60)
+
+    articles = search_active_story(
+        story
+    )
+
+    print(
+        f"📰 New search returned "
+        f"{len(articles)} articles."
+    )
+
+    if not articles:
+        return {
+            "story": story,
+            "articles_found": 0,
+            "new_developments": [],
+            "results": [],
+        }
+
+    stories = load_active_stories()
+
+    results = update_stories_with_articles(
+        stories,
+        articles,
+    )
+
+    new_developments = (
+        get_new_developments(
+            results
+        )
+    )
+
+    save_active_stories(
+        stories
+    )
+
+    # Story object refresh करें
+    for saved_story in stories:
+        if (
+            saved_story.get("story_id")
+            == story.get("story_id")
+        ):
+            story = saved_story
+            break
+
+    return {
+        "story": story,
+        "articles_found": len(articles),
+        "new_developments": new_developments,
+        "results": results,
+    }
