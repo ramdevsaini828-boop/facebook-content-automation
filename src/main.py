@@ -1,5 +1,5 @@
 from trends import get_top_topics
-from news import get_news_articles
+from news import analyze_topic
 
 
 def main():
@@ -13,69 +13,45 @@ def main():
     print("\n🏆 TOP 3 TRENDING TOPICS\n")
 
     if not top_topics:
-
         print("No suitable topics found.")
-
         return
 
-    for number, topic_data in enumerate(
-        top_topics,
-        start=1
-    ):
+    analyses = []
+
+    for number, topic_data in enumerate(top_topics, start=1):
 
         topic = topic_data["topic"]
 
-        print(
-            f"\n{'=' * 50}"
-        )
+        print(f"\n{'#' * 60}")
+        print(f"TOPIC {number}: {topic}")
+        print(f"{'#' * 60}")
 
-        print(
-            f"TOPIC {number}: {topic}"
-        )
+        result = analyze_topic(topic)
 
-        print(
-            f"{'=' * 50}"
-        )
+        analyses.append(result)
 
-        articles = get_news_articles(
-            topic,
-            limit=10
-        )
+    print("\n\n===================================")
+    print(" EVENT ANALYSIS COMPLETE")
+    print("===================================")
 
-        if not articles:
+    for result in analyses:
 
-            print(
-                "No articles found."
-            )
+        print(f"\n📌 {result['topic']}")
 
+        if not result["articles"]:
+            print("   ❌ Not enough fresh news")
             continue
 
-        for article_number, article in enumerate(
-            articles,
-            start=1
-        ):
+        print(
+            f"   📰 Fresh articles: "
+            f"{len(result['articles'])}"
+        )
 
-            print(
-                f"\n{article_number}. "
-                f"{article['title']}"
-            )
+        print("   🔥 Event signals:")
 
-            print(
-                f"   Source: "
-                f"{article['source']}"
-            )
-
-            print(
-                f"   Published: "
-                f"{article['published']}"
-            )
-
-            print(
-                f"   Link: "
-                f"{article['link']}"
-            )
+        for word, count in result["event_signal"][:5]:
+            print(f"      {word}: {count}")
 
 
 if __name__ == "__main__":
-
     main()
