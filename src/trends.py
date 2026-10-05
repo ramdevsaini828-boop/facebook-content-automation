@@ -1,22 +1,27 @@
 import requests
 import xml.etree.ElementTree as ET
+from urllib.parse import quote
 
 
-GOOGLE_TRENDS_RSS = "https://trends.google.com/trending/rss?geo=IN&hl=en-US"
+GOOGLE_TRENDS_RSS = (
+    "https://trends.google.com/trending/rss"
+    "?geo=IN&hl=en-US"
+)
+
+GOOGLE_NEWS_RSS = (
+    "https://news.google.com/rss/search"
+    "?q={query}&hl=en-IN&gl=IN&ceid=IN:en"
+)
 
 
 def get_google_trends(limit=20):
-    """
-    India ke current Google Trends topics fetch karta hai.
-    """
+    """Google Trends se India ke current trending topics fetch karta hai."""
 
     try:
         response = requests.get(
             GOOGLE_TRENDS_RSS,
             timeout=20,
-            headers={
-                "User-Agent": "Mozilla/5.0"
-            }
+            headers={"User-Agent": "Mozilla/5.0"}
         )
 
         response.raise_for_status()
@@ -27,14 +32,14 @@ def get_google_trends(limit=20):
 
         for item in root.findall(".//item"):
             title = item.findtext("title")
-            link = item.findtext("link")
-            description = item.findtext("description")
+            traffic = item.findtext(
+                "{https://trends.google.com/trending/rss}approx_traffic"
+            )
 
             if title:
                 topics.append({
                     "topic": title.strip(),
-                    "link": link,
-                    "description": description
+                    "traffic": traffic
                 })
 
             if len(topics) >= limit:
@@ -47,10 +52,113 @@ def get_google_trends(limit=20):
         return []
 
 
+def check_news_coverage(topic):
+    """
+    Google News RSS par topic ki recent coverage check karta hai.
+    """
+
+    try:
+        encoded_topic = quote(topic)
+
+        url = GOOGLE_NEWS_RSS.format(
+            query=encoded_topic
+        )
+
+        response = requests.get(
+            url,
+            timeout=20,
+            headers={"User-Agent": "Mozilla/5.0"}
+        )
+
+        response.raise_for_status()
+
+        root = ET.fromstring(response.content)
+
+        articles = root.findall(".//item")
+
+        return len(articles)
+
+    except Exception as error:
+        print(f"News check error for '{topic}': {error}")
+        return 0
+
+
+def calculate_score(position, news_count):
+    """
+    Topic ka preliminary viral/relevance score.
+    """
+
+    trend_score = max(0, 100 - ((position - 1) * 5))
+
+    if news_count >= 10:
+        news_score = 40
+    elif news_count >= 7:
+        news_score = 30
+    elif news_count >= 4:
+        news_score = 20
+    elif news_count >= 2:
+        news_score = 10
+    else:
+        news_score = 0
+
+    return trend_score + news_score
+
+
+def get_top_topics(limit=3):
+    """
+    Trending topics me se strongest topics select karta hai.
+    """
+
+    trends = get_google_trends(limit=20)
+
+    if not trends:
+        return []
+
+    scored_topics = []
+
+    print("\n🔎 Checking news coverage...\n")
+
+    for position, item in enumerate(trends, start=1):
+
+        topic = item["topic"]
+
+        news_count = check_news_coverage(topic)
+
+        score = calculate_score(
+            position,
+            news_count
+        )
+
+        scored_topics.append({
+            "topic": topic,
+            "traffic": item["traffic"],
+            "news_count": news_count,
+            "score": score
+        })
+
+        print(
+            f"{position}. {topic} | "
+            f"News: {news_count} | "
+            f"Score: {score}"
+        )
+
+    scored_topics.sort(
+        key=lambda x: x["score"],
+        reverse=True
+    )
+
+    return scored_topics[:limit]
+
+
 if __name__ == "__main__":
-    trends = get_google_trends()
 
-    print("\n🔥 INDIA TRENDING TOPICS\n")
+    print("\n🔥 TOP 3 VIRAL TOPICS\n")
 
-    for number, trend in enumerate(trends, start=1):
-        print(f"{number}. {trend['topic']}")
+    top_topics = get_top_topics(3)
+
+    for number, topic in enumerate(top_topics, start=1):
+
+        print(
+            f"{number}. {topic['topic']} "
+            f"(Score: {topic['score']})"
+        )
