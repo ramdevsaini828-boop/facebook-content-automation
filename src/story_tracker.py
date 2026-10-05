@@ -326,6 +326,15 @@ def refresh_active_story(story):
         stories
     )
 
+    summary = summarize_refresh(results)
+
+return {
+    "story": story,
+    "articles_found": len(articles),
+    "new_developments": new_developments,
+    "results": results,
+    "summary": summary,
+} 
     # Story object refresh करें
     for saved_story in stories:
         if (
