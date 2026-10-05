@@ -292,28 +292,55 @@ def main():
             f"{unavailable_count}"
         )
 
-        # ==========================================
-        # STEP 9 - CONTINUOUS STORY TRACKING
-        # ==========================================
+           # ============================================================
+    # STEP 9 — CONTINUOUS STORY TRACKING
+    # ============================================================
 
-        print("\n")
-        print("=" * 60)
-        print(" 🧵 STEP 9 - CONTINUOUS STORY TRACKING")
-        print("=" * 60)
+    from story_tracker import (
+        track_story,
+        print_story_status,
+        refresh_active_story,
+    )
 
-        tracking_result = track_story(
-            topic,
-            strongest_event,
-            research_data.get(
-                "articles",
-                []
-            ),
-        )
+    print("")
+    print("=" * 60)
+    print(" 🧵 CONTINUOUS STORY TRACKING")
+    print("=" * 60)
 
-        print_story_status(
-            tracking_result
-        )
+    tracking_result = track_story(
+        topic=strongest_event["topic"],
+        event=strongest_event,
+        new_articles=research_data.get("articles", []),
+    )
 
+    print_story_status(tracking_result)
+
+    # ------------------------------------------------------------
+    # REFRESH ACTIVE STORY
+    # ------------------------------------------------------------
+
+    refresh_result = refresh_active_story(
+        tracking_result["story"]
+    )
+
+    summary = refresh_result.get("summary", {})
+
+    print("")
+    print("🔄 STORY REFRESH SUMMARY")
+    print(f"Articles searched: {refresh_result['articles_found']}")
+    print(f"✅ New developments: {summary.get('new', 0)}")
+    print(f"♻️ Duplicates: {summary.get('duplicate', 0)}")
+    print(f"⚠️ Needs review: {summary.get('review', 0)}")
+    print(f"❌ Unrelated: {summary.get('unrelated', 0)}")
+
+    if refresh_result["new_developments"]:
+        print("")
+        print("🆕 NEW STORY DEVELOPMENTS")
+
+        for item in refresh_result["new_developments"]:
+            print(f"• {item.get('title')}")
+            print(f"  Source: {item.get('source')}")
+            
         # ------------------------------------------
         # REFRESH ACTIVE STORY
         # ------------------------------------------
