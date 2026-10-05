@@ -1,6 +1,11 @@
 from story_tracker import (
     track_story,
     print_story_status,
+    refresh_active_story,
+) 
+from story_tracker import (
+    track_story,
+    print_story_status,
 )
 
 from content import (
@@ -349,7 +354,56 @@ def main():
         print("=" * 60)
         print(" 🧵 STEP 9 - CONTINUOUS STORY TRACKING")
         print("=" * 60)
+# STEP 9 - CONTINUOUS STORY TRACKING
+print("\n")
+print("=" * 60)
+print(" 🧵 STEP 9 - CONTINUOUS STORY TRACKING")
+print("=" * 60)
 
+tracking_result = track_story(
+    topic,
+    strongest_event,
+    research_data.get(
+        "articles",
+        []
+    ),
+)
+
+print_story_status(
+    tracking_result
+)
+
+# ---------------------------------------------
+# REFRESH THE ACTIVE STORY
+# ---------------------------------------------
+
+refresh_result = refresh_active_story(
+    tracking_result["story"]
+)
+
+print("")
+print("📡 STORY REFRESH RESULT")
+print(
+    f"Articles found: "
+    f"{refresh_result['articles_found']}"
+)
+
+print(
+    f"New developments: "
+    f"{len(refresh_result['new_developments'])}"
+)
+
+if refresh_result["new_developments"]:
+
+    print("")
+    print("🆕 NEW STORY DEVELOPMENTS")
+
+    for development in (
+        refresh_result["new_developments"]
+    ):
+        print(
+            f"• {development.get('title')}"
+        )
         tracking_result = track_story(
             topic,
             strongest_event,
