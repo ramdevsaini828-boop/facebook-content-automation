@@ -183,7 +183,7 @@ def update_stories_with_articles(
                 "article": article,
                 "story": story,
                 "match_score": score,
-            })
+            }) 
 
             continue
 
@@ -199,6 +199,7 @@ def update_stories_with_articles(
             result
         )
 
+    return results
     return results
     return results
 
